@@ -7,16 +7,14 @@ import { useState } from "react";
 
 const Navbar = () => {
     const [navState, setNavState] = useState(false);
-
     const handleCloseMenu = () => setNavState(false);
-
     const navlinks = (
         <>
             <li className="text-base font-extralight hover:text-green-600 hover:underline">
                 <NavLink to="/" onClick={handleCloseMenu}>Home</NavLink>
             </li>
             <li className="text-base font-extralight hover:text-green-600 hover:underline">
-                <NavLink to="/Buyland" onClick={handleCloseMenu}>Buy Land</NavLink>
+                <NavLink to="/" onClick={handleCloseMenu}>Buy Land</NavLink>
             </li>
             <li className="text-base font-extralight hover:text-green-600 hover:underline">
                 <NavLink to="/Updateprofile" onClick={handleCloseMenu}>Update Profile</NavLink>
@@ -26,7 +24,7 @@ const Navbar = () => {
 
     return (
         <div className="w-full relative">
-            <div className="flex justify-between items-center mt-6 mx-7 md:mt-12 md:mx-14 lg:max-w-6xl lg:mx-auto">
+            <div className="flex justify-between items-center mt-6 mx-7 md:mt-12 md:mx-14 lg:max-w-6xl ">
                 <div className="flex items-center gap-2">
                     <MdOutlineRealEstateAgent size={40} color="green" />
                     <h3 className="text-3xl font-bold">Land Lord</h3>
@@ -40,8 +38,8 @@ const Navbar = () => {
                     <FaRegUserCircle size={40} color="green" />
                     <button className="text-xl font-medium">
                         <p>
-                            <NavLink to="/Login" onClick={handleCloseMenu}>Login</NavLink>/
-                            <NavLink to="/Register" onClick={handleCloseMenu}>Register</NavLink>
+                            <NavLink to="/Login" onClick={handleCloseMenu} className="text-green-700 font-bold">Login</NavLink>/
+                            <NavLink to="/Register" onClick={handleCloseMenu}className="text-green-700 font-bold">Register</NavLink>
                         </p>
                     </button>
                 </div>
