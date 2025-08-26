@@ -12,7 +12,7 @@ const Land = ({ land }) => {
                 {
                     description.length>100 ? description.slice(0,100): description 
                 }
-                ... Read More 
+                ...<p className='text-green-700 link'>Read More</p> 
             </p>
         </div>
     );
