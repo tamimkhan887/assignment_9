@@ -1,49 +1,114 @@
-import { useState } from "react";
-import registerImg from "../../assets/49240206db9cc699bf42fd23ab2f73827cdfaaf0.png"
-import { IoIosEyeOff } from "react-icons/io";
-import { IoIosEye } from "react-icons/io";
+import { useContext, useState } from "react";
+import registerImg from "../../assets/49240206db9cc699bf42fd23ab2f73827cdfaaf0.png";
+import { IoIosEyeOff, IoIosEye } from "react-icons/io";
 import { Link } from "react-router";
-const Register = () => {
-    const [eyes , setEyes] = useState(true);
+import { UserContext } from "../../AuthProvider/AuthProvider";
+import { updateProfile } from "firebase/auth";
+import auth from "../../Firebase/firebase.config";
 
-    const handleRegisterSubmit = (e) =>{
+const Register = () => {
+    const [eyes, setEyes] = useState(true);
+    const [error, setError] = useState("");
+    const { createUser } = useContext(UserContext)
+
+    const handleRegisterSubmit = (e) => {
         e.preventDefault();
-        const formData = new FormData(e.currentTarget)
+        const formData = new FormData(e.currentTarget);
         const name = formData.get("name");
         const photo = formData.get("photo");
-        const email = formData.get("email")
-        const pass = formData.get("password")
-        console.log(name , photo , email , pass)
-    }
+        const email = formData.get("email");
+        const pass = formData.get("password");
+        setError("")
+        const passRegex = /^(?=.*[A-Z])(?=.*[a-z]).{6,}$/;
+        if (!passRegex.test(pass)) {
+            setError("Password must have at least 1 uppercase, 1 lowercase, and be 6+ characters long.");
+            return;
+        }
+        createUser(email, pass)
+            .then(result => {
+                console.log(result.user)
+                updateProfile(auth.currentUser, {
+                    displayName: name,
+                    photoURL: photo
+                })
+                    .then(() => {
+                        console.log("Profile updated!")
+                    })
+                    .catch(error => {
+                        setError(error.code)
+                    })
+            })
+            .catch(error => {
+                setError(error.code)
+            })
+    };
+
     return (
-        <div className="flex items-center justify-between">
-            <div >
-                <img src={registerImg} alt="" />
+        <div className="flex flex-col lg:flex-row items-center justify-center min-h-screen px-4 lg:px-12 gap-10">
+            <div className="flex justify-center w-full lg:w-1/2">
+                <img src={registerImg} alt="" className="max-w-xs lg:max-w-md" />
             </div>
-            <div className="w-3/4">
-                <form onSubmit={handleRegisterSubmit}>
-                    <fieldset className="fieldset">
+            <div className="w-full lg:w-1/2 max-w-lg">
+                <form onSubmit={handleRegisterSubmit} className="space-y-4">
+                    <fieldset className="fieldset space-y-4">
                         <label className="label text-[#000000] font-semibold text-base">Enter Your Name</label>
-                        <input type="text" className="input w-4/5 bg-[#E8E8E8D9] border-[#7E7A7A24] rounded-lg px-[18px] py-[18px]  text-[#00000042] text-[13px]" name="name" placeholder="Name" required/>
+                        <input
+                            type="text"
+                            className="input w-full bg-[#E8E8E8D9] border-[#7E7A7A24] rounded-lg px-4 py-3 text-[#00000042] text-[13px]"
+                            name="name"
+                            placeholder="Name"
+                            required
+                        />
                         <label className="label text-[#000000] font-semibold text-base">Enter Your PhotoURL</label>
-                        <input type="text" className="input w-4/5 bg-[#E8E8E8D9] border-[#7E7A7A24] rounded-lg px-[18px] py-[18px]  text-[#00000042] text-[13px]" placeholder="Name" name="photo" required/>
+                        <input
+                            type="text"
+                            className="input w-full bg-[#E8E8E8D9] border-[#7E7A7A24] rounded-lg px-4 py-3 text-[#00000042] text-[13px]"
+                            placeholder="Photo URL"
+                            name="photo"
+                            required
+                        />
                         <label className="label text-[#000000] font-semibold text-base">Email Address</label>
-                        <input type="email" className="input w-4/5 bg-[#E8E8E8D9] border-[#7E7A7A24] rounded-lg px-[18px] py-[18px] text-[#00000042  text-[13px]" placeholder="Email" name="email" required />
-                        <div className="">
-                            <div>
-                                <label className="label text-[#000000] font-semibold text-base block mb-2">Password</label>
-                                <input type={eyes ? "password" : "text"} className="input w-4/5 bg-[#E8E8E8D9] border-[#7E7A7A24] rounded-lg px-[18px] py-[18px] text-[#00000042  text-[13px]" placeholder="Password" name="password" required/>
-                            </div>
-                            <div className="relative left-3/4 -top-8" onClick={()=>setEyes(!eyes)}>
-                                {
-                                    eyes ? <IoIosEye size={24} color="gray"></IoIosEye> : <IoIosEyeOff size={24} color="gray"></IoIosEyeOff>
-                                }
+                        <input
+                            type="email"
+                            className="input w-full bg-[#E8E8E8D9] border-[#7E7A7A24] rounded-lg px-4 py-3 text-[#00000042] text-[13px]"
+                            placeholder="Email"
+                            name="email"
+                            required
+                        />
+                        <div>
+                            <label className="label text-[#000000] font-semibold text-base block mb-2">Password</label>
+                            <div className="relative w-full">
+                                <input
+                                    type={eyes ? "password" : "text"}
+                                    className="input w-full bg-[#E8E8E8D9] border-[#7E7A7A24] rounded-lg px-4 py-3 text-[#00000042] text-[13px]"
+                                    placeholder="Password"
+                                    name="password"
+                                    required
+                                />
+                                <span
+                                    className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer"
+                                    onClick={() => setEyes(!eyes)}
+                                >
+                                    {eyes ? <IoIosEye size={24} color="gray" /> : <IoIosEyeOff size={24} color="gray" />}
+                                </span>
                             </div>
                         </div>
-                        <input type="submit" value="Register" className="btn btn-neutral w-4/5 bg-green-600 border-none" />
+                        <input
+                            type="submit"
+                            value="Register"
+                            className="btn btn-neutral w-full bg-green-600 border-none text-white font-semibold py-2 rounded-lg"
+                        />
                     </fieldset>
                 </form>
-                <p className="text-sm mt-4">Already Have An Account ? Please <Link className="text-green-600 link font-bold" to='/Login'>Login</Link></p>
+                <p className="text-sm mt-4 text-center">
+                    Already Have An Account? Please{" "}
+                    <Link className="text-green-600 font-bold" to="/Login">
+                        Login
+                    </Link>
+                </p>
+                <p className="text-red-700 text-sm font-bold text-center mt-5">
+                    {error && error}
+                </p>
             </div>
         </div>
     );
