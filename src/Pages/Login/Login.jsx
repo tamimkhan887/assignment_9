@@ -8,13 +8,13 @@ import { UserContext } from "../../AuthProvider/AuthProvider";
 const Login = () => {
     const [eyes, setEyes] = useState(true);
     const [error, setError] = useState("");
-    const {signInUser , signInGoogle} = useContext(UserContext)
+    const {signInUser , signInGoogle , signInGithub , signInFacebook} = useContext(UserContext)
     const handleLoginSubmit = (e) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
         const email = formData.get("email");
         const pass = formData.get("password");
-        setError("")
+        setError("");
         signInUser(email , pass)
         .then(result =>{
             console.log(result.user)
@@ -25,7 +25,28 @@ const Login = () => {
     };
 
     const handleSignInGoogle = () =>{
+        setError("");
         signInGoogle()
+        .then(result=>{
+            console.log(result.user)
+        })
+        .catch(err =>{
+            setError(err.code)
+        })
+    }
+    const handleSignInGithub = () =>{
+        setError("");
+        signInGithub()
+        .then(result=>{
+            console.log(result.user)
+        })
+        .catch(err =>{
+            setError(err.code)
+        })
+    }
+    const handleSignInFacebook = () =>{
+        setError("");
+        signInFacebook()
         .then(result=>{
             console.log(result.user)
         })
@@ -91,8 +112,8 @@ const Login = () => {
                 </p>
                 <div className="flex gap-6 items-center justify-center mt-6 bg-gray-200 p-4 rounded-lg w-full">
                     <FaGoogle onClick={handleSignInGoogle} size={28} className="text-green-600 cursor-pointer" />
-                    <FaFacebook size={28} className="text-blue-600 cursor-pointer" />
-                    <FaGithub size={28} className="text-black cursor-pointer" />
+                    <FaFacebook onClick={handleSignInFacebook} size={28} className="text-blue-600 cursor-pointer" />
+                    <FaGithub onClick={handleSignInGithub} size={28} className="text-black cursor-pointer" />
                 </div>
                 <p className="text-red-700 text-sm font-bold text-center mt-5">
                     {error && error}

@@ -1,21 +1,35 @@
-import React from 'react';
+import { Link } from "react-router";
 
 const Land = ({ land }) => {
-    console.log(land)
-    const { image, estate_title, land_type, description } = land;
+    const {id , image, estate_title, land_type, description } = land;
+
     return (
-        <div className='p-3 border w-full border-green-400 rounded-lg'>
-            <p className='text-3xl font-semibold mb-3'>{estate_title}</p>
-            <img src={image} alt="" className='h-1/2 w-full rounded-lg object-cover' />
-            <p className='text-green-700 font-medium text-lg my-2'>Land type : {land_type}</p>
-            <p>
-                {
-                    description.length>100 ? description.slice(0,100): description 
-                }
-                ...<p className='text-green-700 link'>Read More</p> 
+        <div className="p-6 border border-green-400 rounded-2xl shadow-md bg-white flex flex-col h-[460px]">
+            <p className="text-2xl font-bold mb-3 text-gray-800 line-clamp-1">
+                {estate_title}
             </p>
+
+            <div className="w-full h-44 mb-4 overflow-hidden rounded-lg">
+                <img
+                    src={image}
+                    alt={estate_title}
+                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                />
+            </div>
+
+            <p className="text-green-700 font-medium text-lg mb-2">
+                Land type : {land_type}
+            </p>
+
+            <p className="text-gray-600 text-sm flex-1 line-clamp-3">
+                {description}
+            </p>
+
+            <button className="mt-4 w-fit text-green-700 font-semibold hover:text-green-900 transition-colors">
+                <Link to={`/BuyLand/${id}`}>Read More →</Link>
+            </button>
         </div>
-    );
+    ); 
 };
 
 export default Land;

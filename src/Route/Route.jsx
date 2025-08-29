@@ -4,6 +4,8 @@ import Home from "../Pages/Home/Home";
 import Login from "../Pages/Login/Login";
 import Register from "../Pages/Register/Register";
 import UpdateProfile from "../Pages/UpdateProfile/UpdateProfile";
+import BuyLand from "../Subpages/BuyLand";
+import DetailBuyLand from "../Subpages/DetailBuyLand";
 
 const router = createBrowserRouter([
     {
@@ -27,6 +29,15 @@ const router = createBrowserRouter([
             {
                 path:"/Updateprofile",
                 element: <UpdateProfile></UpdateProfile>
+            },
+            {
+                path: "/BuyLand",
+                element: <BuyLand></BuyLand>
+            },
+            {
+                path: "/BuyLand/:id",
+                element: <DetailBuyLand></DetailBuyLand>,
+                loader: ()=>fetch("../../public/Demo_Data/data.JSON")
             }
         ]
     },
